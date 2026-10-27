@@ -1,0 +1,28 @@
+{
+  "format": 1,
+  "id": "0a6f3c1e-2b4d-4c8a-9e1f-3d5b7a9c1e02",
+  "startedAt": "2026-10-22T10:00:00.000Z",
+  "endedAt": "2026-10-22T10:20:00.000Z",
+  "core": {
+    "rules": 4,
+    "size": 9,
+    "komi": 7.5,
+    "setup": {
+      "black": [],
+      "white": []
+    },
+    "first": "black",
+    "moves": [76, 64, 67, 72, 58, 16, 49, 8, 40, 0, 31, 10, 22, 2, 13, 3, 4, -1, -1, 24, 54, 25, -1, -1],
+    "dead": [8, 16],
+    "result": {
+      "winner": "white",
+      "reason": "score",
+      "margin": 6.5
+    }
+  },
+  "meta": {
+    "mode": "face_to_face",
+    "you": null,
+    "handicap": 0
+  }
+}

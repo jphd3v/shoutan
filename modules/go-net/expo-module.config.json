@@ -1,0 +1,6 @@
+{
+  "platforms": ["android"],
+  "android": {
+    "modules": ["io.github.jphd3v.shoutan.net.GoNetModule"]
+  }
+}

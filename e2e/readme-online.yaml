@@ -1,0 +1,63 @@
+appId: ${APP_ID}
+---
+# The README's online screenshot: Jane Doe on the phone plays Black against John Doe, whom
+# scripts/readme-online.mjs plays through the local stack, in the opening of GNU Go against GoKing at
+# the 2006 Computer Olympiad (gnugo/area/olympiad2006-9x9-gnu-king.sgf).
+- launchApp:
+    clearState: true
+- tapOn: { id: 'welcome-new' }
+- tapOn: { id: 'welcome-name' }
+- inputText: 'Jane Doe'
+- scrollUntilVisible:
+    element: { id: 'welcome-level-basics' }
+    direction: DOWN
+- tapOn: { id: 'welcome-level-basics' }
+- scrollUntilVisible:
+    element: { id: 'welcome-avatar-5' }
+    direction: DOWN
+- tapOn: { id: 'welcome-avatar-5' }
+- scrollUntilVisible:
+    element: { id: 'welcome-next' }
+    direction: DOWN
+- tapOn: { id: 'welcome-next' }
+- runFlow: common/sign-in.yaml
+- scrollUntilVisible:
+    element: { id: 'welcome-family-code' }
+    direction: DOWN
+- tapOn: { id: 'welcome-family-code' }
+- inputText: 'local-family'
+- scrollUntilVisible:
+    element: { id: 'welcome-done' }
+    direction: DOWN
+- tapOn: { id: 'welcome-done' }
+- runFlow:
+    file: common/tap-twice.yaml
+    env: { NOW: 'off' }
+- scrollUntilVisible:
+    element: { id: 'hub-play-online' }
+    direction: DOWN
+- tapOn: { id: 'hub-play-online' }
+- extendedWaitUntil:
+    visible: 'Playing as Jane Doe'
+    timeout: 20000
+- scrollUntilVisible:
+    element: { id: 'create-game' }
+    direction: DOWN
+    timeout: 60000
+- tapOn: { id: 'create-game' }
+- runFlow:
+    when: { visible: { id: 'hub-start' } }
+    commands:
+      - tapOn: { id: 'hub-start' }
+- extendedWaitUntil:
+    visible: 'Jane Doe.*, to play'
+    timeout: 120000
+- runFlow: { file: common/bot-move.yaml, env: { AT: 'E5' } }
+- runFlow: { file: common/bot-move.yaml, env: { AT: 'C4' } }
+- runFlow: { file: common/bot-move.yaml, env: { AT: 'E3' } }
+- runFlow: { file: common/bot-move.yaml, env: { AT: 'E4' } }
+- runFlow: { file: common/bot-move.yaml, env: { AT: 'D5' } }
+- runFlow: { file: common/bot-move.yaml, env: { AT: 'D2' } }
+- runFlow: { file: common/bot-move.yaml, env: { AT: 'B6' } }
+- waitForAnimationToEnd
+- takeScreenshot: online-game

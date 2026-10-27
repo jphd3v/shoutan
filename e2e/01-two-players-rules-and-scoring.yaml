@@ -1,0 +1,197 @@
+# Two players on one phone with the Coach on: a tap that only closes a drawer, a capture and a ko, territory while playing, ghost-stone
+# suggestions and tapping one to show it, refused moves (occupied, suicide, ko), undo and redo, two passes ending the game,
+# stepping through the count, the result, fixing dead stones and a new game.
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+- runFlow: common/welcome.yaml
+- waitForAnimationToEnd
+# Tap twice to place a stone is on for a new player; this flow places stones with one tap.
+- runFlow:
+    file: common/tap-twice.yaml
+    env: { NOW: 'off' }
+- tapOn: { id: 'hub-play-human' }
+- tapOn: { id: 'hub-start' }
+# The Coach is off by default; Settings switches it on for both players.
+- tapOn: { id: 'options' }
+- tapOn: { id: 'options-settings' }
+- scrollUntilVisible:
+    element: { id: 'quick-teaching' }
+    direction: DOWN
+- tapOn: { id: 'quick-teaching' }
+- assertVisible: { id: 'quick-teaching', checked: true }
+- tapOn: { id: 'sheet-close' }
+- assertVisible: '.*, to play'
+# Each player has their own row of buttons at their end, beside their card; Liberties and Territory are in the Guide.
+- assertNotVisible: { id: 'liberties' }
+- assertVisible: { id: 'pass-top' }
+
+# The Coach shows the network's strongest move from the very first turn.
+- extendedWaitUntil:
+    visible: { id: 'guide-ideas', text: '.*strongest move.*' }
+    timeout: 20000
+
+# Black surrounds and captures the white stone on E5.
+- tapOn: { id: 'pt-D5' }
+# Face to face seats the players across the phone: White's card, at the top end upside down, shows it is their turn.
+- assertVisible: { id: 'player-white', text: '.*, to play' }
+- assertNotVisible: { id: 'status' }
+- takeScreenshot: two-player-facing
+- tapOn: { id: 'pt-E5' }
+- tapOn: { id: 'pt-F5' }
+- tapOn: { id: 'pt-A1' }
+- tapOn: { id: 'pt-E6' }
+# White plays elsewhere, and Black's strongest move is the capture, which the Coach says.
+- tapOn: { id: 'pt-A2' }
+- extendedWaitUntil:
+    visible: 'E4, empty, suggested: Strongest move'
+    timeout: 20000
+# Tapping the idea marks it on the board, still as the idea, without playing it.
+- tapOn: 'The strongest move here. You can capture a stone.'
+- assertVisible: { text: 'The strongest move here. You can capture a stone.', selected: true }
+- assertVisible: 'E4, empty, suggested: Strongest move'
+- assertVisible: '.*, to play'
+- takeScreenshot: idea-shown
+# A capture gets no note; the ko's note fades in a few seconds, which a slow emulator's tap can outlast,
+# so this checks the end state; the screen tests check the ko note.
+- tapOn: { id: 'pt-E4' }
+- assertVisible: 'E5, empty'
+# Under area scoring captures don't count, so the cards keep no tally of them.
+- assertNotVisible: { id: 'detail-black' }
+
+# Territory is an option while playing: the point only Black's stones surround shows as Black's area.
+- tapOn: { id: 'options' }
+- tapOn: { id: 'options-settings' }
+- scrollUntilVisible:
+    element: { id: 'quick-territory' }
+    direction: DOWN
+- tapOn: { id: 'quick-territory' }
+- assertVisible: { id: 'quick-territory', text: 'Territory on' }
+- tapOn: { id: 'sheet-close' }
+- assertVisible: 'E5, empty, Black area'
+- assertVisible: 'C5, empty'
+- takeScreenshot: territory-while-playing
+- tapOn: { id: 'options' }
+- tapOn: { id: 'options-settings' }
+- scrollUntilVisible:
+    element: { id: 'quick-territory' }
+    direction: DOWN
+- tapOn: { id: 'quick-territory' }
+- assertVisible: { id: 'quick-territory', text: 'Territory off' }
+- tapOn: { id: 'sheet-close' }
+- assertVisible: 'E5, empty'
+
+# Refused moves change nothing. Their notes fade in about two seconds, which a tap waiting for the screen
+# to settle can outlast, so this checks the end state; the screen tests check the notes' wording.
+- tapOn: { id: 'pt-D5', waitToSettleTimeoutMs: 300 }
+- assertVisible: 'D5, black stone'
+- tapOn: { id: 'pt-E5', waitToSettleTimeoutMs: 300 }
+- assertVisible: 'E5, empty'
+- assertVisible: { id: 'player-white', text: '.*, to play' }
+
+# White sets up a ko and takes F5; Black may not take back at once.
+- tapOn: { id: 'pt-G5' }
+- tapOn: { id: 'pt-A9' }
+- tapOn: { id: 'pt-F6' }
+- tapOn: { id: 'pt-B9' }
+- tapOn: { id: 'pt-F4' }
+- tapOn: { id: 'pt-C9' }
+- tapOn: { id: 'pt-E5' }
+- assertVisible: 'F5, empty'
+- tapOn: { id: 'pt-F5', waitToSettleTimeoutMs: 300 }
+- assertVisible: 'F5, empty'
+- assertVisible: { id: 'player-black', text: '.*, to play' }
+- takeScreenshot: two-player-ko
+- tapOn: { id: 'pt-J9' }
+- tapOn: { id: 'pt-J1' }
+- tapOn: { id: 'pt-F5' }
+- assertVisible: 'E5, empty'
+
+# Undo takes back one move, and redo plays it again.
+- tapOn: { id: 'undo' }
+- assertVisible: 'E5, white stone'
+- assertVisible: '.*, to play'
+- tapOn: { id: 'redo' }
+- assertVisible: 'E5, empty'
+
+# Two passes end play: the board marks the stones it thinks are captured for the players to check.
+# Each player passes from their own end: White's button is at the top, and only the player to move can pass.
+- assertVisible: { id: 'pass', enabled: false }
+- runFlow: { file: common/pass.yaml, env: { PASS: 'pass-top' } }
+- assertVisible: 'White passed · pass too to finish'
+- assertVisible: { id: 'pass-top', enabled: false }
+- runFlow: { file: common/pass.yaml, env: { PASS: 'pass' } }
+- assertVisible: { id: 'status', text: '(No stones marked|Check the|Tap a \? group).*' }
+- takeScreenshot: two-player-review
+# Count counts it, starting with the stones taken off. The count waits for the players to step
+# through it (Watch runs it on its own), and can be stepped back and forth, and skipped.
+- tapOn: { id: 'accept' }
+- assertVisible: 'Tap Watch, or.*'
+- assertVisible: 'Watch'
+# Before the first step, back would return to marking the stones, so the count steps in first.
+- tapOn: { id: 'count-next' }
+- tapOn: { id: 'count-back' }
+- assertVisible: 'Tap Watch, or.*'
+- tapOn: { id: 'count-next' }
+- assertVisible: 'Counting · step [1-9] of [0-9]+'
+- assertVisible: { id: 'count-callout', text: '.+' }
+- assertVisible: { id: 'count-legend', text: '(Taken off, )?Black points, White points, (½ each, )?\+7½ komi' }
+- assertVisible: { id: 'count-legend-top' }
+- takeScreenshot: two-player-count-step
+- tapOn: { id: 'count-skip' }
+- extendedWaitUntil:
+    visible: { id: 'result-card' }
+    timeout: 10000
+- assertVisible: { id: 'breakdown-white-top', text: '.*7½ komi.*' }
+- assertVisible: { id: 'result-title', text: '(Black|White) wins!' }
+- assertVisible: { id: 'result-subtitle', text: 'by .* points' }
+- takeScreenshot: two-player-result
+
+# If the guess about dead stones is wrong, it can be fixed: ◀◀ goes back through the count, one
+# step at a time from its last, to marking the stones, tapping a group marks the whole group dead, tapping again brings it back,
+# and Count counts again.
+- tapOn: { id: 'count-replay', waitToSettleTimeoutMs: 300 }
+- repeat:
+    times: 16
+    while:
+      notVisible: { id: 'status', text: '(No stones marked|Check the|Tap a \? group).*' }
+    commands:
+      - tapOn: { id: 'count-back', waitToSettleTimeoutMs: 300 }
+- assertVisible: { id: 'status', text: '(No stones marked|Check the|Tap a \? group).*' }
+- assertNotVisible: { id: 'detail-black' }
+- runFlow:
+    when:
+      visible: 'A1, white stone, marked dead.*'
+    commands:
+      - tapOn: { id: 'pt-A1' }
+# A tapped group is the players' decision, no longer a guess marked "not sure".
+- assertVisible: 'A1, white stone(, not sure)?'
+- tapOn: { id: 'pt-A1' }
+- assertVisible: 'A1, white stone, marked dead'
+- assertVisible: 'A2, white stone, marked dead'
+- takeScreenshot: two-player-counting
+- tapOn: { id: 'accept', waitToSettleTimeoutMs: 300 }
+- tapOn: { id: 'count-skip', waitToSettleTimeoutMs: 300 }
+- extendedWaitUntil:
+    visible: { id: 'result-card' }
+    timeout: 10000
+
+# The result sits under the final board; New game starts a fresh game with the same settings.
+- tapOn: { id: 'rematch' }
+- assertVisible: '.*, to play'
+- assertNotVisible: { id: 'detail-black' }
+
+# Resigning asks once more inside Options; the player to move resigns.
+- tapOn: { id: 'options' }
+- tapOn: { id: 'resign' }
+- assertVisible: 'Resign? Black will lose this game.'
+- tapOn: { id: 'resign-cancel' }
+- assertNotVisible: { id: 'resign-confirm' }
+- tapOn: { id: 'resign' }
+- tapOn: { id: 'resign-yes' }
+- extendedWaitUntil:
+    visible: { id: 'result-card' }
+    timeout: 10000
+- assertVisible: { id: 'result-title', text: 'White wins!' }
+- assertVisible: { id: 'result-subtitle', text: 'Black resigned' }

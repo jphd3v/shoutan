@@ -1,0 +1,9 @@
+appId: ${APP_ID}
+---
+# Passes with the button ${PASS}. With much of the board still open the app asks for a second tap first.
+- tapOn: { id: '${PASS}' }
+- runFlow:
+    when:
+      visible: 'There’s still open space to claim.*'
+    commands:
+      - tapOn: { id: '${PASS}' }

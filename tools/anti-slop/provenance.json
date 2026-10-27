@@ -1,0 +1,10 @@
+{
+  "repository": "https://github.com/dmmulroy/anti-slop",
+  "revision": "c44ef22ca116d0ba62a3ff663a0bd13a3f3fa40b",
+  "files": [
+    "src/rules/no-chained-type-assertions.ts",
+    "src/rules/no-reduce-accumulator-copy.ts",
+    "src/shared/array-method.ts",
+    "LICENSE"
+  ]
+}

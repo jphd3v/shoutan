@@ -1,0 +1,11 @@
+android/
+ios/
+.expo/
+e2e-output/
+coverage/
+tools/anti-slop/
+supabase/.temp/
+package-lock.json
+screenshots/
+dist/
+src/ui/notices.json

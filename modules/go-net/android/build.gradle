@@ -1,0 +1,24 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'io.github.jphd3v.shoutan'
+version = '1.0.0'
+
+android {
+  namespace "io.github.jphd3v.shoutan.net"
+  defaultConfig {
+    versionCode 1
+    versionName '1.0.0'
+  }
+  // The networks are read whole into memory; storing them uncompressed keeps the APK's read fast.
+  androidResources {
+    noCompress += ['onnx']
+  }
+}
+
+dependencies {
+  // Pinned: the same runtime in every build.
+  implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.24.3'
+}

@@ -1,0 +1,110 @@
+appId: ${APP_ID}
+---
+# The phone creates a game from the menu, giving up its game face to face after being asked, plays it on
+# the game screen, counts it and sends feedback from it. scripts/test-online.mjs plays White.
+- launchApp:
+    clearState: true
+# The welcome signs in and joins the family too, so the menu's Play online is ready at once.
+- tapOn: { id: 'welcome-new' }
+- tapOn: { id: 'welcome-name' }
+- inputText: ${PLAYER_NAME}
+# Not hideKeyboard: on Android it presses back, which steps the welcome back.
+- scrollUntilVisible:
+    element: { id: 'welcome-level-beginner' }
+    direction: DOWN
+- tapOn: { id: 'welcome-level-beginner' }
+- scrollUntilVisible:
+    element: { id: 'welcome-avatar-5' }
+    direction: DOWN
+- tapOn: { id: 'welcome-avatar-5' }
+- scrollUntilVisible:
+    element: { id: 'welcome-next' }
+    direction: DOWN
+- tapOn: { id: 'welcome-next' }
+- runFlow: common/sign-in.yaml
+- scrollUntilVisible:
+    element: { id: 'welcome-family-code' }
+    direction: DOWN
+- tapOn: { id: 'welcome-family-code' }
+- inputText: 'local-family'
+- scrollUntilVisible:
+    element: { id: 'welcome-done' }
+    direction: DOWN
+- tapOn: { id: 'welcome-done' }
+# The level starts some of the Guide's helps; the flows are written for a plain board.
+- runFlow: common/helps-off.yaml
+# Tap twice to place a stone is on for a new player; this flow places stones with one tap.
+- runFlow:
+    file: common/tap-twice.yaml
+    env: { NOW: 'off' }
+- scrollUntilVisible:
+    element: { id: 'hub-play-human' }
+    direction: DOWN
+- tapOn: { id: 'hub-play-human' }
+- tapOn: { id: 'hub-start' }
+- tapOn: { id: 'pt-D4' }
+- assertVisible: 'D4, black stone'
+- tapOn: { id: 'options' }
+- tapOn: { id: 'options-hub' }
+- tapOn: { id: 'hub-play-online' }
+- extendedWaitUntil:
+    visible: 'Playing as ${PLAYER_NAME}'
+    timeout: 20000
+- scrollUntilVisible:
+    element: { id: 'create-game' }
+    direction: DOWN
+    # Past every family member in the lobby, however many a database holds.
+    timeout: 60000
+- tapOn: { id: 'create-game' }
+# One game at a time: the game face to face would be lost, so creating one asks first.
+- scrollUntilVisible:
+    element: { id: 'lobby-discard' }
+    direction: DOWN
+- tapOn: { id: 'lobby-discard' }
+- extendedWaitUntil:
+    visible: { id: 'player-black', text: '.*, to play' }
+    timeout: 20000
+- tapOn: { id: 'pt-E5' }
+- assertVisible: 'E5, black stone'
+- extendedWaitUntil:
+    visible: 'C3, white stone'
+    timeout: 20000
+- extendedWaitUntil:
+    visible: { id: 'player-black', text: '.*, to play' }
+    timeout: 20000
+- takeScreenshot: online-game
+- runFlow: { file: common/pass.yaml, env: { PASS: 'pass' } }
+- extendedWaitUntil:
+    visible: '(No stones marked|Check the|Tap a \? group).*'
+    timeout: 20000
+- tapOn: { id: 'accept' }
+# Once both have accepted, the count waits for this phone to step through it; skip it to the result.
+- extendedWaitUntil:
+    visible: { id: 'count-skip' }
+    timeout: 60000
+- tapOn: { id: 'count-skip' }
+- extendedWaitUntil:
+    visible: { id: 'result-card' }
+    timeout: 10000
+- assertVisible: { id: 'result-title', text: 'You win!|.* wins' }
+- takeScreenshot: online-result
+- tapOn: { id: 'options' }
+- scrollUntilVisible:
+    element: { id: 'feedback' }
+    direction: DOWN
+- tapOn: { id: 'feedback' }
+- tapOn: { id: 'feedback-text' }
+- inputText: ${REPORT_MESSAGE}
+- scrollUntilVisible:
+    element: { id: 'feedback-send' }
+    direction: DOWN
+- tapOn: { id: 'feedback-send' }
+- extendedWaitUntil:
+    visible: 'Thank you! Your message was sent.'
+    timeout: 20000
+- tapOn: { id: 'feedback-close' }
+- tapOn: { id: 'options' }
+- tapOn: { id: 'options-hub' }
+# The online game is over and the game face to face was given up: there is nothing to continue.
+- assertVisible: { id: 'hub-play-online' }
+- assertNotVisible: { id: 'hub-resume' }

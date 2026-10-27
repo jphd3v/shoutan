@@ -1,0 +1,78 @@
+# A complete game against the bot through the UI: you keep passing until the bot passes
+# too, you confirm the stones marked dead, then the board counts and the result shows, with territory shown as squares, offers the handicap your rating
+# calls for, and shows Go ranks when asked.
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+- runFlow: common/welcome.yaml
+- waitForAnimationToEnd
+# Tap twice to place a stone is on for a new player; this flow places stones with one tap.
+- runFlow:
+    file: common/tap-twice.yaml
+    env: { NOW: 'off' }
+- tapOn: { id: 'hub-play-bot' }
+- tapOn: { id: 'hub-start' }
+- tapOn: { id: 'pt-E5' }
+# Pass whenever it's your turn; once the bot passes too, play ends and the dead stones are marked.
+- repeat:
+    times: 40
+    while:
+      visible: { id: 'pass' }
+    commands:
+      - extendedWaitUntil:
+          visible: 'Tester.*, to play|.* passed · pass too to finish|No stones marked.*|Check the.*|Tap a \? group.*'
+          timeout: 30000
+      - runFlow:
+          when:
+            visible: 'Tester.*, to play|.* passed · pass too to finish'
+          commands:
+            - runFlow: { file: common/pass.yaml, env: { PASS: 'pass' } }
+- tapOn: { id: 'accept', waitToSettleTimeoutMs: 300 }
+- runFlow:
+    when:
+      visible: { id: 'count-skip' }
+    commands:
+      # The count waits for the player to step through it.
+      - assertVisible: { id: 'count-legend', text: '(Taken off, )?Black points, White points, (½ each, )?\+7½ komi' }
+      - takeScreenshot: vs-bot-counting
+      - tapOn: { id: 'count-skip' }
+- extendedWaitUntil:
+    visible: { id: 'result-card' }
+    timeout: 10000
+- assertVisible: { id: 'result-title', text: 'Bot wins|You win!' }
+- assertVisible: { id: 'result-subtitle', text: 'by .* points' }
+- takeScreenshot: vs-bot-result
+
+# Experienced players can show Go ranks beside the names.
+- tapOn: { id: 'options' }
+- tapOn: { id: 'options-hub' }
+- tapOn: { id: 'hub-options' }
+- scrollUntilVisible:
+    element: { id: 'show-ranks' }
+    direction: DOWN
+- tapOn: { id: 'show-ranks' }
+- scrollUntilVisible:
+    element: { id: 'hub-back' }
+    direction: UP
+- tapOn: { id: 'hub-back' }
+- tapOn: { id: 'hub-close' }
+- assertVisible: { id: 'player-black', text: 'Tester · [0-9]+k.*' }
+- assertVisible: { id: 'player-white', text: 'Bot · 18k.*' }
+- takeScreenshot: vs-bot-ranks
+
+# The level chosen at the welcome shows in the menu's profile with the rank, and can't be changed.
+- tapOn: { id: 'options' }
+- tapOn: { id: 'options-hub' }
+- tapOn: { id: 'hub-profile' }
+- assertVisible: { id: 'hub-level-value', text: 'Beginner · [0-9]+k' }
+- assertNotVisible: { id: 'hub-level-more' }
+- scrollUntilVisible:
+    element: { id: 'hub-profile-done' }
+    direction: DOWN
+- tapOn: { id: 'hub-profile-done' }
+- tapOn: { id: 'hub-play-bot' }
+- tapOn: { id: 'hub-game-settings' }
+- scrollUntilVisible:
+    element: 'Suggested for your level: .*'
+    direction: DOWN

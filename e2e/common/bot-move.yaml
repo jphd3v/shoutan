@@ -1,0 +1,13 @@
+appId: ${APP_ID}
+---
+# Plays at AT when the point is still empty, then waits for the bot's reply.
+- runFlow:
+    when: { visible: '${AT}, empty.*' }
+    commands:
+      - tapOn: { id: 'pt-${AT}' }
+      - extendedWaitUntil:
+          visible: '.*, to play'
+          timeout: 30000
+      - extendedWaitUntil:
+          visible: 'Jane Doe.*, to play'
+          timeout: 30000

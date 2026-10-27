@@ -1,0 +1,194 @@
+# Playing the bot: sound toggle, it replies, undo, the game kept across an app restart, new game,
+# 13x13 with confirm tap, and the rules.
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+- runFlow: common/welcome.yaml
+- waitForAnimationToEnd
+- takeScreenshot: hub
+# Tap twice to place a stone is on for a new player; this flow places stones with one tap.
+- runFlow:
+    file: common/tap-twice.yaml
+    env: { NOW: 'off' }
+- tapOn: { id: 'hub-play-bot' }
+- tapOn: { id: 'hub-start' }
+# The Coach is switched on in Settings.
+- tapOn: { id: 'guide' }
+- scrollUntilVisible:
+    element: { id: 'quick-teaching' }
+    direction: DOWN
+- tapOn: { id: 'quick-teaching' }
+- tapOn: { id: 'sheet-close' }
+# The app opens straight into a 9x9 game against the bot, you as Black.
+- assertVisible: { id: 'player-black', text: '.*, to play' }
+- extendedWaitUntil:
+    visible: { id: 'guide-ideas', text: '.*strongest move.*' }
+    timeout: 20000
+- takeScreenshot: launch
+# Sound can be turned off and on again in the Guide and display sheet.
+- tapOn: { id: 'guide' }
+- scrollUntilVisible:
+    element: { id: 'sound' }
+    direction: DOWN
+- tapOn: { id: 'sound' }
+- assertVisible: 'Sound off'
+- scrollUntilVisible:
+    element: { id: 'sound' }
+    direction: DOWN
+- tapOn: { id: 'sound' }
+- assertVisible: 'Sound on'
+- tapOn: { id: 'sheet-close' }
+# The menu at the top right offers to keep playing.
+- tapOn: { id: 'options' }
+- tapOn: { id: 'options-resume' }
+- tapOn: { id: 'pt-E5' }
+- assertVisible: 'E5, black stone'
+- extendedWaitUntil:
+    visible: '.*, white stone'
+    timeout: 30000
+- assertVisible: { id: 'player-black', text: '.*, to play' }
+- assertVisible: 'E5, black stone'
+
+# Undo takes back the bot's reply and your move together; redo brings both back.
+- tapOn: { id: 'undo' }
+- assertVisible: 'E5, empty'
+- assertNotVisible: '.*, white stone'
+- tapOn: { id: 'redo' }
+- assertVisible: 'E5, black stone'
+- assertVisible: '.*, white stone'
+- assertVisible: { id: 'player-black', text: '.*, to play' }
+- tapOn: { id: 'undo' }
+- assertVisible: 'E5, empty'
+
+- tapOn: { id: 'pt-C3' }
+- assertVisible: 'C3, black stone'
+- extendedWaitUntil:
+    visible: '.*, white stone'
+    timeout: 30000
+- tapOn: { id: 'pt-D4' }
+- assertVisible: 'D4, black stone'
+- extendedWaitUntil:
+    visible: { id: 'player-black', text: '.*, to play' }
+    timeout: 30000
+- takeScreenshot: vs-bot-midgame
+
+# The game survives the app being stopped: the menu offers to continue it.
+- stopApp
+- launchApp
+- waitForAnimationToEnd
+- assertVisible: { id: 'hub-resume', text: 'Continue.*9×9 · Bot · Move 4' }
+- tapOn: { id: 'hub-resume' }
+- assertVisible: 'C3, black stone'
+- assertVisible: 'D4, black stone'
+- assertVisible: { id: 'player-black', text: '.*, to play' }
+
+# New game opens the setup for another game against the bot; starting it clears the board.
+- tapOn: { id: 'options' }
+- tapOn: { id: 'new-game' }
+- scrollUntilVisible:
+    element: { id: 'hub-start' }
+    direction: DOWN
+- tapOn: { id: 'hub-start' }
+- tapOn: { id: 'hub-discard' }
+- assertVisible: 'C3, empty'
+
+# A handicap game starts with Black's stones on the board, and the bot plays first as White.
+- tapOn: { id: 'options' }
+- tapOn: { id: 'options-hub' }
+- tapOn: { id: 'hub-play-bot' }
+- tapOn: { id: 'hub-game-settings' }
+- scrollUntilVisible:
+    element: { id: 'hub-handicap-more' }
+    direction: DOWN
+- tapOn: { id: 'hub-handicap-more' }
+- assertVisible: { id: 'hub-handicap-value', text: '1 stone' }
+- tapOn: { id: 'hub-handicap-more' }
+- assertVisible: { id: 'hub-handicap-value', text: '2 stones' }
+- scrollUntilVisible:
+    element: { id: 'hub-start' }
+    direction: DOWN
+- tapOn: { id: 'hub-start' }
+- runFlow:
+    when: { visible: { id: 'hub-discard' } }
+    commands:
+      - tapOn: { id: 'hub-discard' }
+- assertVisible: 'C3, black stone'
+- assertVisible: 'G7, black stone'
+- extendedWaitUntil:
+    visible: { id: 'player-black', text: '.*, to play' }
+    timeout: 30000
+- assertVisible: '.*, white stone'
+- takeScreenshot: vs-bot-handicap
+- tapOn: { id: 'options' }
+# Main menu keeps the game under Continue.
+- tapOn: { id: 'options-hub' }
+- assertVisible: { id: 'hub-resume' }
+- tapOn: { id: 'hub-play-bot' }
+- scrollUntilVisible:
+    element: { id: 'hub-start' }
+    direction: DOWN
+- tapOn: { id: 'hub-start' }
+# Setup remembers the handicap, so the game restarts with Black's two stones; the bot may or may not have moved yet.
+- runFlow:
+    when: { visible: { id: 'hub-discard' } }
+    commands:
+      - tapOn: { id: 'hub-discard' }
+- assertVisible: 'C3, black stone'
+- assertVisible: 'G7, black stone'
+- extendedWaitUntil:
+    visible: { id: 'player-black', text: '.*, to play' }
+    timeout: 30000
+
+# Ticking "Tap twice to place a stone" again in Settings makes a move a preview tap and a confirming tap, here on 13x13.
+- tapOn: { id: 'options' }
+- tapOn: { id: 'options-hub' }
+- runFlow:
+    file: common/tap-twice.yaml
+    env: { NOW: 'on' }
+- tapOn: { id: 'hub-play-bot' }
+- tapOn: { id: 'hub-size-13' }
+# The remembered handicap shows open; this game goes back to none.
+- scrollUntilVisible:
+    element: { id: 'hub-handicap-less' }
+    direction: DOWN
+- tapOn: { id: 'hub-handicap-less' }
+- tapOn: { id: 'hub-handicap-less' }
+- assertVisible: { id: 'hub-handicap-value', text: 'None' }
+- scrollUntilVisible:
+    element: { id: 'hub-start' }
+    direction: DOWN
+- tapOn: { id: 'hub-start' }
+- runFlow:
+    when: { visible: { id: 'hub-discard' } }
+    commands:
+      - tapOn: { id: 'hub-discard' }
+- tapOn: { id: 'pt-G7' }
+- assertVisible: 'Tap again to place the stone'
+- tapOn: { id: 'pt-G7' }
+- assertVisible: 'G7, black stone'
+- extendedWaitUntil:
+    visible: '.*, white stone'
+    timeout: 60000
+- takeScreenshot: vs-bot-13x13
+
+# The rules sheet, from the menu at the top right.
+- tapOn: { id: 'options' }
+- tapOn: { id: 'help' }
+- waitForAnimationToEnd
+- assertVisible: 'Rules'
+- assertVisible: '2. Surround to capture'
+- takeScreenshot: rules-sheet
+- scrollUntilVisible:
+    element: { id: 'rules-more' }
+    direction: DOWN
+- tapOn: { id: 'rules-more' }
+- scrollUntilVisible:
+    element: 'Two eyes live'
+    direction: DOWN
+- takeScreenshot: rules-going-further
+- scrollUntilVisible:
+    element: { id: 'close-help' }
+    direction: DOWN
+- tapOn: { id: 'close-help' }
+- assertVisible: 'G7, black stone'

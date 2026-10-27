@@ -1,0 +1,24 @@
+appId: ${APP_ID}
+---
+# A new player is welcomed before anything else: a name, and a level, which nothing preselects.
+- tapOn: { id: 'welcome-new' }
+- tapOn: { id: 'welcome-name' }
+- inputText: 'Tester'
+# Not hideKeyboard: on Android it presses back, which steps the welcome back.
+- scrollUntilVisible:
+    element: { id: 'welcome-level-beginner' }
+    direction: DOWN
+- tapOn: { id: 'welcome-level-beginner' }
+# An animal as avatar, so the screens show one on the player's card.
+- scrollUntilVisible:
+    element: { id: 'welcome-avatar-5' }
+    direction: DOWN
+- tapOn: { id: 'welcome-avatar-5' }
+- scrollUntilVisible:
+    element: { id: 'welcome-next' }
+    direction: DOWN
+- tapOn: { id: 'welcome-next' }
+# Family sign-in is offered next, and passed by here.
+- tapOn: { id: 'welcome-done' }
+# The level starts some of the Guide's helps; the flows are written for a plain board.
+- runFlow: helps-off.yaml

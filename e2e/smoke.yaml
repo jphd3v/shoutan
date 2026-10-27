@@ -1,0 +1,68 @@
+# What only a phone can show, in a couple of minutes: real touches on the board, the bot
+# replying on Hermes, the game kept after the app is stopped, the confirm tap and drag on 19x19,
+# and two passes through the review and count to the result. The rest of the app's behaviour is
+# covered by the screen tests in src/__tests__/app.test.tsx; flows 01–05 are the release flows.
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+- runFlow: common/welcome.yaml
+- waitForAnimationToEnd
+- takeScreenshot: smoke-menu
+# Tap twice to place a stone is on for a new player; this flow places stones with one tap.
+- runFlow:
+    file: common/tap-twice.yaml
+    env: { NOW: 'off' }
+- tapOn: { id: 'hub-play-bot' }
+- tapOn: { id: 'hub-start' }
+- tapOn: { id: 'pt-E5' }
+- assertVisible: 'E5, black stone'
+- extendedWaitUntil:
+    visible: '.*, white stone'
+    timeout: 30000
+- takeScreenshot: smoke-vs-bot
+
+- stopApp
+- launchApp
+- tapOn: { id: 'hub-resume' }
+- assertVisible: 'E5, black stone'
+- assertVisible: '.*, white stone'
+
+- tapOn: { id: 'options' }
+- tapOn: { id: 'options-hub' }
+# This flow turned tap twice off for its first game; it is ticked again for the small points of 19x19.
+- runFlow:
+    file: common/tap-twice.yaml
+    env: { NOW: 'on' }
+# Main menu keeps the game under Continue; starting another asks to replace it.
+- tapOn: { id: 'hub-play-human' }
+- tapOn: { id: 'hub-size-19' }
+- tapOn: { id: 'hub-start' }
+- runFlow:
+    when: { visible: { id: 'hub-discard' } }
+    commands:
+      - tapOn: { id: 'hub-discard' }
+- tapOn: { id: 'pt-D4' }
+- assertVisible: 'Tap again to place the stone'
+- tapOn: { id: 'pt-D4' }
+- assertVisible: 'D4, black stone'
+# Dragging from C3 to G7 leaves the preview at G7. Screen percentages fit the Medium Phone emulator,
+# with the coordinates 19x19 shows by default.
+- swipe:
+    start: 16%, 64%
+    end: 35%, 55%
+    duration: 800
+- assertVisible: 'C3, empty'
+- tapOn: { id: 'pt-G7' }
+- assertVisible: 'G7, white stone'
+- takeScreenshot: smoke-19x19
+
+- runFlow: { file: common/pass.yaml, env: { PASS: 'pass' } }
+- runFlow: { file: common/pass.yaml, env: { PASS: 'pass-top' } }
+- assertVisible: { id: 'status', text: '(No stones marked|Check the|Tap a \? group).*' }
+- tapOn: { id: 'accept', waitToSettleTimeoutMs: 300 }
+- tapOn: { id: 'count-skip', optional: true }
+- extendedWaitUntil:
+    visible: { id: 'result-card' }
+    timeout: 10000
+- takeScreenshot: smoke-result

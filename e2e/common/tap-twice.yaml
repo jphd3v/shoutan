@@ -1,0 +1,22 @@
+appId: ${APP_ID}
+---
+# From the main menu, sets "Tap twice to place a stone" in Settings to ${NOW} (on or off), then returns to the menu.
+- scrollUntilVisible:
+    element: { id: 'hub-options' }
+    direction: DOWN
+- tapOn: { id: 'hub-options' }
+- scrollUntilVisible:
+    element: { id: 'confirm-moves' }
+    direction: DOWN
+- runFlow:
+    when: { notVisible: 'Tap twice to place a stone ${NOW}' }
+    commands:
+      - tapOn: { id: 'confirm-moves' }
+- assertVisible: 'Tap twice to place a stone ${NOW}'
+- scrollUntilVisible:
+    element: { id: 'hub-back' }
+    direction: UP
+- tapOn: { id: 'hub-back' }
+- scrollUntilVisible:
+    element: { id: 'hub-play-bot' }
+    direction: UP

@@ -1,0 +1,66 @@
+appId: ${APP_ID}
+---
+# The phone sees a family member who has Play online open, asks them to play, and the game starts
+# when they join. scripts/test-online.mjs plays the family member.
+- launchApp:
+    clearState: true
+- tapOn: { id: 'welcome-new' }
+- tapOn: { id: 'welcome-name' }
+- inputText: ${FIRST_NAME}
+# Not hideKeyboard: on Android it presses back, which steps the welcome back.
+- scrollUntilVisible:
+    element: { id: 'welcome-level-beginner' }
+    direction: DOWN
+- tapOn: { id: 'welcome-level-beginner' }
+- scrollUntilVisible:
+    element: { id: 'welcome-avatar-5' }
+    direction: DOWN
+- tapOn: { id: 'welcome-avatar-5' }
+- scrollUntilVisible:
+    element: { id: 'welcome-next' }
+    direction: DOWN
+- tapOn: { id: 'welcome-next' }
+# Family sign-in is offered next, and passed by here.
+- tapOn: { id: 'welcome-done' }
+# The level starts some of the Guide's helps; the flows are written for a plain board.
+- runFlow: common/helps-off.yaml
+# Play online asks for an email sign-in first, then the family code; the player joins under the welcome's name.
+- scrollUntilVisible:
+    element: { id: 'hub-play-online' }
+    direction: DOWN
+- tapOn: { id: 'hub-play-online' }
+- runFlow: common/sign-in.yaml
+- tapOn: { id: 'family-code' }
+- inputText: 'not-the-code'
+- tapOn: { id: 'register' }
+- extendedWaitUntil:
+    visible: 'That family code did not match[.] Please try again[.]'
+    timeout: 20000
+- tapOn: { id: 'family-code' }
+- eraseText: 20
+- inputText: 'local-family'
+- tapOn: { id: 'register' }
+- extendedWaitUntil:
+    visible: 'Playing as ${FIRST_NAME}'
+    timeout: 20000
+- extendedWaitUntil:
+    visible: 'Online now'
+    timeout: 30000
+- takeScreenshot: ask-people
+- tapOn: { id: 'person-${PEER_ID}' }
+- scrollUntilVisible:
+    element: { id: 'create-game' }
+    direction: DOWN
+    # Past every family member in the lobby, however many a database holds.
+    timeout: 60000
+- assertVisible: 'Ask E2E opponent.* to play'
+- tapOn: { id: 'create-game' }
+- extendedWaitUntil:
+    visible: { id: 'player-white', text: 'E2E opponent.*' }
+    timeout: 30000
+- tapOn: { id: 'options' }
+- tapOn: { id: 'resign' }
+- tapOn: { id: 'resign-yes' }
+- extendedWaitUntil:
+    visible: { id: 'result-title', text: 'E2E opponent.* wins' }
+    timeout: 20000

@@ -1,0 +1,48 @@
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+- runFlow: common/welcome.yaml
+- waitForAnimationToEnd
+# Tap twice to place a stone is on for a new player; this flow places stones with one tap.
+- runFlow:
+    file: common/tap-twice.yaml
+    env: { NOW: 'off' }
+- tapOn: { id: 'hub-play-bot' }
+- tapOn: { id: 'hub-start' }
+- tapOn: { id: 'options' }
+- scrollUntilVisible:
+    element: { id: 'feedback' }
+    direction: DOWN
+# Feedback needs online play, so a player who hasn't signed in is asked to first.
+- tapOn: { id: 'feedback' }
+- assertVisible: 'Sign in and enter the family code to send feedback.'
+- assertVisible: { id: 'feedback-sign-in' }
+- takeScreenshot: offline-feedback
+- tapOn: { id: 'sheet-close' }
+- assertVisible: { id: 'player-black', text: '.*, to play' }
+- tapOn: { id: 'options' }
+- tapOn: { id: 'options-hub' }
+- tapOn: { id: 'hub-play-human' }
+- tapOn: { id: 'hub-start' }
+- tapOn: { id: 'pt-E5' }
+- assertVisible: 'E5, black stone'
+# The menu keeps an unfinished game when the app starts again; starting another game from it asks first, and Keep playing goes back to this one.
+- stopApp
+- launchApp
+- waitForAnimationToEnd
+- tapOn: { id: 'hub-play-bot' }
+- tapOn: { id: 'hub-start' }
+- assertVisible: 'Your current game will be lost.'
+- takeScreenshot: hub-replace-confirm
+- tapOn: { id: 'hub-keep' }
+- assertVisible: 'E5, black stone'
+# Looking at online play and coming back leaves this game as it was.
+- stopApp
+- launchApp
+- waitForAnimationToEnd
+- tapOn: { id: 'hub-play-online' }
+- assertVisible: { id: 'hub-online' }
+- tapOn: { id: 'hub-back' }
+- tapOn: { id: 'hub-resume' }
+- assertVisible: 'E5, black stone'

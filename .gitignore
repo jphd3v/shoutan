@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+
+# Expo and generated native projects (configure them in app.config.ts)
+.expo/
+/android/
+/ios/
+web-build/
+expo-env.d.ts
+.kotlin/
+.metro-health-check*
+
+# Build output and test artifacts
+dist/
+coverage/
+e2e-output/
+*.tsbuildinfo
+
+# Local tools (npm run maestro:install)
+/tools/maestro/
+/tools/maestro.zip
+/tools/.maestro-*/
+
+# Secrets and signing material: never commit them
+.env*.local
+*.jks
+*.p8
+*.p12
+*.key
+*.pem
+*.mobileprovision
+
+# Claude Code: per-machine settings (npm run infra writes the paths agents may not read into them)
+.claude/settings.local.json
+.cc-writes/
+
+# Logs, editor and OS files
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+*.orig.*
+.DS_Store
+
+# Gradle output of local native modules
+modules/*/android/build/
+modules/*/android/.cxx/

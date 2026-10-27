@@ -1,0 +1,26 @@
+appId: ${APP_ID}
+---
+# Signs in with an emailed code, read from the local stack's mail catcher. Needs EMAIL and MAILPIT_URL.
+- scrollUntilVisible:
+    element: { id: 'sign-in-email' }
+    direction: DOWN
+- tapOn: { id: 'sign-in-email' }
+- inputText: ${EMAIL}
+# The keyboard's own key sends the code, so the flow never has to find the button under the keyboard,
+# whose size differs between emulators. Not hideKeyboard: on Android it presses back, which leaves the online view.
+- pressKey: Enter
+- extendedWaitUntil:
+    visible: { id: 'sign-in-code' }
+    timeout: 20000
+- runScript:
+    file: email-code.js
+    env:
+      EMAIL: ${EMAIL}
+      MAILPIT_URL: ${MAILPIT_URL}
+- tapOn: { id: 'sign-in-code' }
+- inputText: ${output.code}
+- pressKey: Enter
+# Signed in, the code form goes; the screen stays where it was.
+- extendedWaitUntil:
+    notVisible: { id: 'verify-code' }
+    timeout: 20000

@@ -1,0 +1,28 @@
+{
+  "format": 1,
+  "id": "0a6f3c1e-2b4d-4c8a-9e1f-3d5b7a9c1e04",
+  "startedAt": "2026-10-22T12:00:00.000Z",
+  "endedAt": "2026-10-22T12:03:00.000Z",
+  "core": {
+    "rules": 4,
+    "size": 13,
+    "komi": 3.5,
+    "setup": {
+      "black": [48, 120, 126],
+      "white": []
+    },
+    "first": "white",
+    "moves": [132, 42, 28, 31],
+    "dead": [],
+    "result": {
+      "winner": "black",
+      "reason": "resign",
+      "margin": null
+    }
+  },
+  "meta": {
+    "mode": "bot",
+    "you": "black",
+    "handicap": 3
+  }
+}

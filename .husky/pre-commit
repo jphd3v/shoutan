@@ -1,0 +1,6 @@
+# Hooks run outside an interactive shell, so select the Node version from .nvmrc.
+[ -s "$HOME/.nvm/nvm.sh" ] && . "$HOME/.nvm/nvm.sh" && nvm use --silent
+npm run guard -- --staged
+npm run format:check
+npm run lint
+npm run typecheck

@@ -1,0 +1,311 @@
+# The screenshots in README.md, from a fresh install: the welcome and cover, the main menu, a beginner
+# game against the bot with the Coach, a rated game through marking, the count and the result with the
+# rank, and a face-to-face game. Run by hand on the emulator; the images land in the
+# output folder's takeScreenshot/ and are copied into screenshots/.
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd
+- takeScreenshot: welcome
+- tapOn: { id: 'welcome-about' }
+- waitForAnimationToEnd
+- takeScreenshot: cover
+- tapOn: { id: 'welcome-about-cover-close' }
+
+- tapOn: { id: 'welcome-new' }
+- tapOn: { id: 'welcome-name' }
+- inputText: 'Jane Doe'
+- scrollUntilVisible:
+    element: { id: 'welcome-level-basics' }
+    direction: DOWN
+- tapOn: { id: 'welcome-level-basics' }
+- scrollUntilVisible:
+    element: { id: 'welcome-avatar-5' }
+    direction: DOWN
+- tapOn: { id: 'welcome-avatar-5' }
+- scrollUntilVisible:
+    element: { id: 'welcome-next' }
+    direction: DOWN
+- tapOn: { id: 'welcome-next' }
+- tapOn: { id: 'welcome-done' }
+- waitForAnimationToEnd
+- runFlow:
+    file: common/tap-twice.yaml
+    env: { NOW: 'off' }
+- takeScreenshot: menu
+
+# A beginner game against the bot: the Coach shows its ideas as ghost stones.
+- tapOn: { id: 'hub-play-bot' }
+- waitForAnimationToEnd
+- takeScreenshot: bot-setup
+- tapOn: { id: 'hub-beginner' }
+- runFlow: { file: common/bot-move.yaml, env: { AT: 'E5' } }
+- runFlow: { file: common/bot-move.yaml, env: { AT: 'C5' } }
+- runFlow: { file: common/bot-move.yaml, env: { AT: 'G5' } }
+- runFlow: { file: common/bot-move.yaml, env: { AT: 'E3' } }
+- runFlow: { file: common/bot-move.yaml, env: { AT: 'C3' } }
+- extendedWaitUntil:
+    visible: { id: 'guide-ideas', text: '.*strongest move.*' }
+    timeout: 30000
+- takeScreenshot: vs-bot-coach
+
+# The replays run without the Coach and the Guide's helps, which would put advice on the boards.
+- tapOn: { id: 'options' }
+- tapOn: { id: 'options-settings' }
+- scrollUntilVisible:
+    element: { id: 'quick-teaching' }
+    direction: DOWN
+- tapOn: { id: 'quick-teaching' }
+- tapOn: { id: 'sheet-close' }
+- tapOn: { id: 'options' }
+- tapOn: { id: 'options-hub' }
+- runFlow: common/helps-off.yaml
+
+# GNU Go (Black) against CrazyStone (White), 9×9, 2006 Computer Olympiad.
+- tapOn: { id: 'hub-play-human' }
+- tapOn: { id: 'hub-size-9' }
+- scrollUntilVisible:
+    element: { id: 'hub-start' }
+    direction: DOWN
+- tapOn: { id: 'hub-start' }
+- runFlow:
+    when: { visible: { id: 'hub-discard' } }
+    commands:
+      - tapOn: { id: 'hub-discard' }
+- tapOn: { id: 'pt-E5' }
+- tapOn: { id: 'pt-F4' }
+- tapOn: { id: 'pt-G3' }
+- tapOn: { id: 'pt-G5' }
+- tapOn: { id: 'pt-F3' }
+- tapOn: { id: 'pt-E4' }
+- tapOn: { id: 'pt-E3' }
+- tapOn: { id: 'pt-D4' }
+- tapOn: { id: 'pt-C2' }
+- tapOn: { id: 'pt-C5' }
+- tapOn: { id: 'pt-C7' }
+- tapOn: { id: 'pt-D7' }
+- tapOn: { id: 'pt-C8' }
+- tapOn: { id: 'pt-C6' }
+- tapOn: { id: 'pt-E6' }
+- tapOn: { id: 'pt-E8' }
+- tapOn: { id: 'pt-H4' }
+- tapOn: { id: 'pt-F7' }
+- tapOn: { id: 'pt-H6' }
+- tapOn: { id: 'pt-B6' }
+- tapOn: { id: 'pt-G8' }
+- tapOn: { id: 'pt-H5' }
+- tapOn: { id: 'pt-J5' }
+- tapOn: { id: 'pt-G6' }
+- tapOn: { id: 'pt-H7' }
+- tapOn: { id: 'pt-G7' }
+- tapOn: { id: 'pt-B4' }
+- tapOn: { id: 'pt-C3' }
+- tapOn: { id: 'pt-B3' }
+- tapOn: { id: 'pt-H8' }
+- tapOn: { id: 'pt-J8' }
+- tapOn: { id: 'pt-G4' }
+- tapOn: { id: 'pt-H9' }
+- tapOn: { id: 'pt-H3' }
+- tapOn: { id: 'pt-J4' }
+- tapOn: { id: 'pt-A5' }
+- tapOn: { id: 'pt-F8' }
+- tapOn: { id: 'pt-D3' }
+- tapOn: { id: 'pt-E7' }
+- tapOn: { id: 'pt-J6' }
+- tapOn: { id: 'pt-J7' }
+- tapOn: { id: 'pt-G2' }
+- tapOn: { id: 'pt-H2' }
+- tapOn: { id: 'pt-E2' }
+- tapOn: { id: 'pt-J3' }
+- tapOn: { id: 'pt-F2' }
+- tapOn: { id: 'pt-H3' }
+- tapOn: { id: 'pt-B2' }
+- tapOn: { id: 'pt-D6' }
+- tapOn: { id: 'pt-D2' }
+- tapOn: { id: 'pt-G1' }
+- tapOn: { id: 'pt-F1' }
+- tapOn: { id: 'pt-H1' }
+- tapOn: { id: 'pt-B7' }
+- tapOn: { id: 'pt-B8' }
+- tapOn: { id: 'pt-A7' }
+- tapOn: { id: 'pt-A8' }
+- tapOn: { id: 'pt-D5' }
+- tapOn: { id: 'pt-E9' }
+- tapOn: { id: 'pt-C1' }
+- tapOn: { id: 'pt-D8' }
+- tapOn: { id: 'pt-B1' }
+- tapOn: { id: 'pt-F6' }
+- runFlow: { file: common/pass.yaml, env: { PASS: 'pass-top' } }
+- tapOn: { id: 'pt-F5' }
+- runFlow: { file: common/pass.yaml, env: { PASS: 'pass-top' } }
+- runFlow: { file: common/pass.yaml, env: { PASS: 'pass' } }
+- extendedWaitUntil:
+    visible: { id: 'status', text: '(No stones marked|Check the|Tap a \? group).*' }
+    timeout: 30000
+- waitForAnimationToEnd
+- takeScreenshot: marking
+- tapOn: { id: 'accept', waitToSettleTimeoutMs: 300 }
+- tapOn: { id: 'count-next' }
+- tapOn: { id: 'count-next' }
+- tapOn: { id: 'count-next' }
+- takeScreenshot: counting
+- tapOn: { id: 'count-skip' }
+- extendedWaitUntil:
+    visible: { id: 'result-card' }
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: result
+
+# Honinbo Shusaku (Black) against Honinbo Shuwa (White), 1846, to the last move before White resigned.
+- tapOn: { id: 'options' }
+- tapOn: { id: 'options-hub' }
+- tapOn: { id: 'hub-play-human' }
+- tapOn: { id: 'hub-size-19' }
+- scrollUntilVisible:
+    element: { id: 'hub-start' }
+    direction: DOWN
+- tapOn: { id: 'hub-start' }
+- tapOn: { id: 'pt-R16' }
+- tapOn: { id: 'pt-D15' }
+- tapOn: { id: 'pt-Q3' }
+- tapOn: { id: 'pt-P17' }
+- tapOn: { id: 'pt-C4' }
+- tapOn: { id: 'pt-R5' }
+- tapOn: { id: 'pt-Q15' }
+- tapOn: { id: 'pt-R10' }
+- tapOn: { id: 'pt-E4' }
+- tapOn: { id: 'pt-M3' }
+- tapOn: { id: 'pt-H3' }
+- tapOn: { id: 'pt-C9' }
+- tapOn: { id: 'pt-C17' }
+- tapOn: { id: 'pt-E17' }
+- tapOn: { id: 'pt-C15' }
+- tapOn: { id: 'pt-C14' }
+- tapOn: { id: 'pt-D16' }
+- tapOn: { id: 'pt-E16' }
+- tapOn: { id: 'pt-B14' }
+- tapOn: { id: 'pt-D14' }
+- tapOn: { id: 'pt-B13' }
+- tapOn: { id: 'pt-L17' }
+- tapOn: { id: 'pt-R12' }
+- tapOn: { id: 'pt-S3' }
+- tapOn: { id: 'pt-Q5' }
+- tapOn: { id: 'pt-R6' }
+- tapOn: { id: 'pt-O3' }
+- tapOn: { id: 'pt-L5' }
+- tapOn: { id: 'pt-P7' }
+- tapOn: { id: 'pt-Q7' }
+- tapOn: { id: 'pt-O5' }
+- tapOn: { id: 'pt-J3' }
+- tapOn: { id: 'pt-J4' }
+- tapOn: { id: 'pt-H2' }
+- tapOn: { id: 'pt-J2' }
+- tapOn: { id: 'pt-K3' }
+- tapOn: { id: 'pt-G2' }
+- tapOn: { id: 'pt-H4' }
+- tapOn: { id: 'pt-G3' }
+- tapOn: { id: 'pt-C18' }
+- tapOn: { id: 'pt-B18' }
+- tapOn: { id: 'pt-B16' }
+- tapOn: { id: 'pt-C16' }
+- tapOn: { id: 'pt-D18' }
+- tapOn: { id: 'pt-B17' }
+- tapOn: { id: 'pt-K14' }
+- tapOn: { id: 'pt-H14' }
+- tapOn: { id: 'pt-H16' }
+- tapOn: { id: 'pt-K2' }
+- tapOn: { id: 'pt-J5' }
+- tapOn: { id: 'pt-K4' }
+- tapOn: { id: 'pt-L3' }
+- tapOn: { id: 'pt-H5' }
+- tapOn: { id: 'pt-K5' }
+- tapOn: { id: 'pt-H6' }
+- tapOn: { id: 'pt-K8' }
+- tapOn: { id: 'pt-C7' }
+- tapOn: { id: 'pt-D11' }
+- tapOn: { id: 'pt-F11' }
+- tapOn: { id: 'pt-D7' }
+- tapOn: { id: 'pt-C6' }
+- tapOn: { id: 'pt-F9' }
+- tapOn: { id: 'pt-F14' }
+- tapOn: { id: 'pt-G13' }
+- tapOn: { id: 'pt-H12' }
+- tapOn: { id: 'pt-F13' }
+- tapOn: { id: 'pt-H13' }
+- tapOn: { id: 'pt-H9' }
+- tapOn: { id: 'pt-K13' }
+- tapOn: { id: 'pt-L13' }
+- tapOn: { id: 'pt-L12' }
+- tapOn: { id: 'pt-K12' }
+- tapOn: { id: 'pt-K11' }
+- tapOn: { id: 'pt-J13' }
+- tapOn: { id: 'pt-J12' }
+- tapOn: { id: 'pt-R13' }
+- tapOn: { id: 'pt-M13' }
+- tapOn: { id: 'pt-P6' }
+- tapOn: { id: 'pt-O6' }
+- tapOn: { id: 'pt-L11' }
+- tapOn: { id: 'pt-K13' }
+- tapOn: { id: 'pt-O7' }
+- tapOn: { id: 'pt-L14' }
+- tapOn: { id: 'pt-P8' }
+- tapOn: { id: 'pt-N2' }
+- tapOn: { id: 'pt-Q13' }
+- tapOn: { id: 'pt-N17' }
+- tapOn: { id: 'pt-P15' }
+- tapOn: { id: 'pt-P14' }
+- tapOn: { id: 'pt-P16' }
+- tapOn: { id: 'pt-Q14' }
+- tapOn: { id: 'pt-N16' }
+- tapOn: { id: 'pt-J17' }
+- tapOn: { id: 'pt-L15' }
+- tapOn: { id: 'pt-K16' }
+- tapOn: { id: 'pt-P13' }
+- tapOn: { id: 'pt-O14' }
+- tapOn: { id: 'pt-O13' }
+- tapOn: { id: 'pt-M16' }
+- tapOn: { id: 'pt-L16' }
+- tapOn: { id: 'pt-N15' }
+- tapOn: { id: 'pt-N18' }
+- tapOn: { id: 'pt-K15' }
+- tapOn: { id: 'pt-R18' }
+- tapOn: { id: 'pt-N13' }
+- tapOn: { id: 'pt-M14' }
+- tapOn: { id: 'pt-J14' }
+- tapOn: { id: 'pt-M15' }
+- tapOn: { id: 'pt-N14' }
+- tapOn: { id: 'pt-M17' }
+- tapOn: { id: 'pt-O12' }
+- tapOn: { id: 'pt-S13' }
+- tapOn: { id: 'pt-G14' }
+- tapOn: { id: 'pt-H18' }
+- tapOn: { id: 'pt-J18' }
+- tapOn: { id: 'pt-H17' }
+- tapOn: { id: 'pt-S2' }
+- tapOn: { id: 'pt-S4' }
+- tapOn: { id: 'pt-E15' }
+- tapOn: { id: 'pt-F15' }
+- tapOn: { id: 'pt-E14' }
+- tapOn: { id: 'pt-C12' }
+- tapOn: { id: 'pt-G8' }
+- tapOn: { id: 'pt-B12' }
+- tapOn: { id: 'pt-E10' }
+- tapOn: { id: 'pt-C8' }
+- tapOn: { id: 'pt-B8' }
+- tapOn: { id: 'pt-B9' }
+- tapOn: { id: 'pt-B7' }
+- tapOn: { id: 'pt-F8' }
+- tapOn: { id: 'pt-H8' }
+- tapOn: { id: 'pt-G9' }
+- tapOn: { id: 'pt-J9' }
+- tapOn: { id: 'pt-J8' }
+- tapOn: { id: 'pt-K9' }
+- tapOn: { id: 'pt-L8' }
+- tapOn: { id: 'pt-D10' }
+- tapOn: { id: 'pt-C10' }
+- tapOn: { id: 'pt-E12' }
+- tapOn: { id: 'pt-F7' }
+- tapOn: { id: 'pt-E6' }
+- waitForAnimationToEnd
+- takeScreenshot: face-to-face

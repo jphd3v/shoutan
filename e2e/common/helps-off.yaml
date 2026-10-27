@@ -1,0 +1,34 @@
+appId: ${APP_ID}
+---
+# From the main menu, switches off the Guide's helps a new player's level may have turned on, so a
+# flow starts from a plain board, then returns to the menu. The score estimate's playouts would
+# otherwise keep the screen busy, and Maestro waits for it to settle.
+- scrollUntilVisible:
+    element: { id: 'hub-options' }
+    direction: DOWN
+- tapOn: { id: 'hub-options' }
+- scrollUntilVisible:
+    element: { id: 'score-estimate' }
+    direction: DOWN
+- runFlow:
+    when: { visible: 'Territory on' }
+    commands:
+      - tapOn: { id: 'show-territory' }
+- runFlow:
+    when: { visible: 'Likely areas on' }
+    commands:
+      - tapOn: { id: 'likely-areas' }
+- runFlow:
+    when: { visible: 'Score estimate on' }
+    commands:
+      - tapOn: { id: 'score-estimate' }
+- assertVisible: 'Territory off'
+- assertVisible: 'Likely areas off'
+- assertVisible: 'Score estimate off'
+- scrollUntilVisible:
+    element: { id: 'hub-back' }
+    direction: UP
+- tapOn: { id: 'hub-back' }
+- scrollUntilVisible:
+    element: { id: 'hub-play-bot' }
+    direction: UP

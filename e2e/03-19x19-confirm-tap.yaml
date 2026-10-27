@@ -1,0 +1,55 @@
+# "Tap twice to place a stone" is on for a new player: a move takes a preview tap and a confirming tap;
+# dragging moves the preview, and switching to Finnish and back changes the board labels and status.
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+- runFlow: common/welcome.yaml
+- waitForAnimationToEnd
+- tapOn: { id: 'hub-play-human' }
+- tapOn: { id: 'hub-size-19' }
+- tapOn: { id: 'hub-start' }
+- assertVisible: '.*, to play'
+- tapOn: { id: 'pt-D4' }
+- assertVisible: 'Tap again to place the stone'
+- assertVisible: 'D4, empty'
+- tapOn: { id: 'pt-Q16' }
+- tapOn: { id: 'pt-Q16' }
+- assertVisible: 'Q16, black stone'
+- assertVisible: { id: 'player-white', text: '.*, to play' }
+- tapOn: { id: 'pt-D4' }
+- tapOn: { id: 'pt-D4' }
+- assertVisible: 'D4, white stone'
+- takeScreenshot: two-player-19x19
+# Dragging from C3 to G7 leaves the preview at G7 without placing a stone; a tap places it.
+# Pixels on a 1080×2400 screen, midway between where C3 and G7 sit on the local emulator and on CI's,
+# whose taller status bar puts the board 32 px lower; a swipe by direction would leave the board.
+- swipe:
+    start: 176, 1566
+    end: 384, 1358
+    duration: 800
+- assertVisible: 'Tap again to place the stone'
+- assertVisible: 'C3, empty'
+- assertVisible: 'G7, empty'
+- tapOn: { id: 'pt-G7' }
+- assertVisible: 'G7, black stone'
+
+# The language is chosen in Settings, here opened from the menu at the top right; the board's labels and the status follow at once.
+- tapOn: { id: 'options' }
+- tapOn: { id: 'options-settings' }
+- scrollUntilVisible:
+    element: { id: 'opt-lang-fi' }
+    direction: DOWN
+- tapOn: { id: 'opt-lang-fi' }
+- tapOn: { id: 'sheet-close' }
+- assertVisible: 'G7, musta kivi'
+- assertVisible: { id: 'player-white', text: '.*, vuorossa' }
+- takeScreenshot: finnish
+- tapOn: { id: 'options' }
+- tapOn: { id: 'options-settings' }
+- scrollUntilVisible:
+    element: { id: 'opt-lang-en' }
+    direction: DOWN
+- tapOn: { id: 'opt-lang-en' }
+- tapOn: { id: 'sheet-close' }
+- assertVisible: 'G7, black stone'

@@ -1,0 +1,175 @@
+{
+  "about": "An even 9×9 game (rules version 4, the 2002 Chinese rules): two walls with the column between them shared, half to each, in the count.",
+  "meta": {
+    "id": "9e4a2c71-5b3d-4f08-8c6e-1a7d3b5f9c24",
+    "size": 9,
+    "komi": 7.5,
+    "rulesVersion": 4,
+    "handicap": 0
+  },
+  "events": [
+    {
+      "kind": "play",
+      "color": "black",
+      "point": 75,
+      "prev": "b596c2dbbfc843104432786428064b4ed557282eb46c32c96d1e353354a12ac8",
+      "hash": "7319b5c7a1346f36a1f35b02afed46dfe6551fc03e6be5c652d9e4fe03c93196"
+    },
+    {
+      "kind": "play",
+      "color": "white",
+      "point": 77,
+      "prev": "7319b5c7a1346f36a1f35b02afed46dfe6551fc03e6be5c652d9e4fe03c93196",
+      "hash": "1159091fcd30706ae98f1374211ea530cd11ab4c9c4e9b6c5765067876ac33bc"
+    },
+    {
+      "kind": "play",
+      "color": "black",
+      "point": 66,
+      "prev": "1159091fcd30706ae98f1374211ea530cd11ab4c9c4e9b6c5765067876ac33bc",
+      "hash": "4cf53bf164a5f7d369e4744c05350e503dff5215a526cb5f83162c9aa6c5cad0"
+    },
+    {
+      "kind": "play",
+      "color": "white",
+      "point": 68,
+      "prev": "4cf53bf164a5f7d369e4744c05350e503dff5215a526cb5f83162c9aa6c5cad0",
+      "hash": "c5575140f05cdb9eb1a2c788c7ccfe62af7b0e3b691cb5b4ad38fe4f6069950b"
+    },
+    {
+      "kind": "play",
+      "color": "black",
+      "point": 57,
+      "prev": "c5575140f05cdb9eb1a2c788c7ccfe62af7b0e3b691cb5b4ad38fe4f6069950b",
+      "hash": "f23ba13a18928fdfad3124ca93074b9dc5674c169701125e1ce59beaf2234522"
+    },
+    {
+      "kind": "play",
+      "color": "white",
+      "point": 59,
+      "prev": "f23ba13a18928fdfad3124ca93074b9dc5674c169701125e1ce59beaf2234522",
+      "hash": "7d962653855891665b28024158159df3ef4636f3e86ef09f413d7d63c207c4c3"
+    },
+    {
+      "kind": "play",
+      "color": "black",
+      "point": 48,
+      "prev": "7d962653855891665b28024158159df3ef4636f3e86ef09f413d7d63c207c4c3",
+      "hash": "347eb45350a2b1aeaf4a484368b615d8da7470bb153934563a0450d8d6685cdd"
+    },
+    {
+      "kind": "play",
+      "color": "white",
+      "point": 50,
+      "prev": "347eb45350a2b1aeaf4a484368b615d8da7470bb153934563a0450d8d6685cdd",
+      "hash": "52b9785a92bb01d918b9515199ac0f1dd9bf9382fb32816bed113203d5d4da29"
+    },
+    {
+      "kind": "play",
+      "color": "black",
+      "point": 39,
+      "prev": "52b9785a92bb01d918b9515199ac0f1dd9bf9382fb32816bed113203d5d4da29",
+      "hash": "b55578e68d352d430278dbfe48952588c6663fe8afd638b3c02e6e07133a9f12"
+    },
+    {
+      "kind": "play",
+      "color": "white",
+      "point": 41,
+      "prev": "b55578e68d352d430278dbfe48952588c6663fe8afd638b3c02e6e07133a9f12",
+      "hash": "c76afb0bdadb4a06bec4ca2f9427cdc4d7c5011c8ec932b48948250351424ae9"
+    },
+    {
+      "kind": "play",
+      "color": "black",
+      "point": 30,
+      "prev": "c76afb0bdadb4a06bec4ca2f9427cdc4d7c5011c8ec932b48948250351424ae9",
+      "hash": "5182b8dde1b1091dd9886d473ede872fd5a6bb971dd86a08467b9b235bb4be0f"
+    },
+    {
+      "kind": "play",
+      "color": "white",
+      "point": 32,
+      "prev": "5182b8dde1b1091dd9886d473ede872fd5a6bb971dd86a08467b9b235bb4be0f",
+      "hash": "650f9156969d60c4c7c36d99c133b1b0cc7147153e6ea0a1d222b38fc0b3d589"
+    },
+    {
+      "kind": "play",
+      "color": "black",
+      "point": 21,
+      "prev": "650f9156969d60c4c7c36d99c133b1b0cc7147153e6ea0a1d222b38fc0b3d589",
+      "hash": "16ad74d39f6596d97586d65e17da197e4a5d24751ea2b295b73a06468038c021"
+    },
+    {
+      "kind": "play",
+      "color": "white",
+      "point": 23,
+      "prev": "16ad74d39f6596d97586d65e17da197e4a5d24751ea2b295b73a06468038c021",
+      "hash": "4d059dba9dd93c17704f889bc4bc2dced3a0a75c817050bae71d514e1b25ac8d"
+    },
+    {
+      "kind": "play",
+      "color": "black",
+      "point": 12,
+      "prev": "4d059dba9dd93c17704f889bc4bc2dced3a0a75c817050bae71d514e1b25ac8d",
+      "hash": "c527f26a737686479a9cd1f1355c98b45f23c132e77675676fb6a741b43a7691"
+    },
+    {
+      "kind": "play",
+      "color": "white",
+      "point": 14,
+      "prev": "c527f26a737686479a9cd1f1355c98b45f23c132e77675676fb6a741b43a7691",
+      "hash": "9a46ba0433706f2d31e34b25099095f1ef63b6c0af805b0e0bfa763f18c8ddfe"
+    },
+    {
+      "kind": "play",
+      "color": "black",
+      "point": 3,
+      "prev": "9a46ba0433706f2d31e34b25099095f1ef63b6c0af805b0e0bfa763f18c8ddfe",
+      "hash": "e3c03fe5164bed1f08b9170065dcc6bdc35b504d41de414a17fbeced52279560"
+    },
+    {
+      "kind": "play",
+      "color": "white",
+      "point": 5,
+      "prev": "e3c03fe5164bed1f08b9170065dcc6bdc35b504d41de414a17fbeced52279560",
+      "hash": "0255f9c0f8d35313a755ae23490486952433ebd773f47e0c28c140e880dbcd76"
+    },
+    {
+      "kind": "pass",
+      "color": "black",
+      "prev": "0255f9c0f8d35313a755ae23490486952433ebd773f47e0c28c140e880dbcd76",
+      "hash": "1a7566994ffdd3313a0a197c9636e03c7ebfa927a6d5e88bd8ecb72f438a9a7b"
+    },
+    {
+      "kind": "pass",
+      "color": "white",
+      "dead": [],
+      "prev": "1a7566994ffdd3313a0a197c9636e03c7ebfa927a6d5e88bd8ecb72f438a9a7b",
+      "hash": "f302a07a0a58bb10ba81a693ddafac36093da081ff3a7579a780bc965ed8a31a"
+    },
+    {
+      "kind": "accept",
+      "color": "black",
+      "prev": "f302a07a0a58bb10ba81a693ddafac36093da081ff3a7579a780bc965ed8a31a",
+      "hash": "b292b99cd1497f63f93d54bfe8a8d00fe5d5a4c31387420c0b59cf61c3c6bf22"
+    },
+    {
+      "kind": "accept",
+      "color": "white",
+      "prev": "b292b99cd1497f63f93d54bfe8a8d00fe5d5a4c31387420c0b59cf61c3c6bf22",
+      "hash": "0a4d69d54d86d1a7bf73c51037ba59d7ef6d58963acb75127626d59f706bc944"
+    }
+  ],
+  "head": "0a4d69d54d86d1a7bf73c51037ba59d7ef6d58963acb75127626d59f706bc944",
+  "summary": {
+    "status": "over",
+    "toPlay": "black",
+    "result": {
+      "winner": "white",
+      "reason": "score",
+      "margin": 7.5,
+      "black": 40.5,
+      "white": 48
+    }
+  }
+}
